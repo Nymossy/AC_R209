@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des utilisateurs{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2>Liste des utilisateurs</h2>
+  
+  <div class="row mt-4">
+    {% for user in users %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ user.id }}</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Prénom :</strong> {{ user.prenom }}</li>
+              <li class="list-group-item"><strong>Nom :</strong> {{ user.nom }}</li>
+              <li class="list-group-item"><strong>Email :</strong> {{ user.email }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
