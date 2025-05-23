@@ -1,20 +1,107 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from : me
-    <ul>
-        <li>Your controller at <code>C:/Symfony/R209/R209_projet/src/Controller/DashboardController.php</code></li>
-        <li>Your template at <code>C:/Symfony/R209/R209_projet/templates/dashboard/index.html.twig</code></li>
-    </ul>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Colonne principale pour les notes (9/12 = 3/4) -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Mes notes</h1>
+                <a href="{{ path('app_note_new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Créer une note
+                </a>
+            </div>
+            
+            {% if app.user.notes is empty %}
+                <div class="alert alert-info">
+                    Vous n'avez pas encore créé de notes. Cliquez sur "Créer une note" pour commencer !
+                </div>
+            {% else %}
+                <div class="list-group">
+                    {% for note in app.user.notes|sort((a, b) => b.createdAt <=> a.createdAt) %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ note.titre }}</h5>
+                                <small class="text-muted">{{ note.createdAt ? note.createdAt|date('d/m/Y H:i') : '' }}</small>
+                            </div>
+                            <p class="mb-1">{{ note.description|slice(0, 150) ~ (note.description|length > 150 ? '...' : '') }}</p>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <div>
+                                    {% if note.tag %}
+                                        {% for tag in note.tag %}
+                                            <span class="badge bg-info text-dark me-1">{{ tag.nom }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if note.etat %}
+                                        <span class="badge bg-{{ note.etat.nom == 'En cours' ? 'warning' : (note.etat.nom == 'Terminé' ? 'success' : 'secondary') }} ms-2">
+                                            {{ note.etat.nom }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <a href="{{ path('app_note_show', {'id': note.id}) }}" class="btn btn-sm btn-outline-primary">Voir</a>
+                                    <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Colonne de droite pour les tags (3/12 = 1/4) -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Tags disponibles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column">
+                        <a href="{{ path('app_tag_new') }}" class="btn btn-sm btn-outline-primary mb-3">
+                            <i class="fas fa-plus"></i> Nouveau tag
+                        </a>
+                        
+                        {% set allTags = [] %}
+                        {% for note in app.user.notes %}
+                            {% for tag in note.tag %}
+                                {% if tag.nom not in allTags %}
+                                    {% set allTags = allTags|merge([tag.nom]) %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        
+                        {% if allTags is empty %}
+                            <p class="text-muted">Aucun tag utilisé pour le moment.</p>
+                        {% else %}
+                            <div class="list-group">
+                                {% for tagName in allTags|sort %}
+                                    <span class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ tagName }}
+                                        <span class="badge bg-primary rounded-pill">
+                                            {% set count = 0 %}
+                                            {% for note in app.user.notes %}
+                                                {% for tag in note.tag %}
+                                                    {% if tag.nom == tagName %}
+                                                        {% set count = count + 1 %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {{ count }}
+                                        </span>
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ path('app_tag_index') }}" class="btn btn-sm btn-outline-secondary w-100">Gérer les tags</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

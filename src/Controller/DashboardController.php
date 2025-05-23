@@ -8,7 +8,15 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Doctrine\ORM\EntityManagerInterface;
+
 use App\Entity\User;
+use App\Entity\Etat;
+use App\Form\Note;
+use App\Form\Tag;
+use Doctrine\Common\Collections\Criteria;
+use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Note as NoteEntity;
+use App\Entity\Tag as TagEntity;
 
 final class DashboardController extends AbstractController
 {
@@ -21,7 +29,6 @@ final class DashboardController extends AbstractController
         ]);
     }
 
-    #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_USER")'))]
     #[Route('/accueil', name: 'app_accueil')]
     public function accueil(): Response
     {
@@ -42,4 +49,5 @@ final class DashboardController extends AbstractController
             'users' => $users,
         ]);
     }
+    
 }
