@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New VieNote{% endblock %}
+
+{% block body %}
+    <h1>Create new VieNote</h1>
+
+    {{ include('vie_note/_form.html.twig') }}
+
+    <a href="{{ path('app_vie_note_index') }}">back to list</a>
+{% endblock %}

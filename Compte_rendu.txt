@@ -1,5 +1,10 @@
     Compte rendu TP1 :
 
+0. Perso :
+    - J'ai ajouté mon logo :
+        - dans la navbar à la place du nom du site,
+        - dans l'onglet de navigation à côté du nom de la page.
+
 1. Création Controller Calendrier
     1.1 Il existe 2 méthode pour afficher la date et l'heure :
         1. On utilise le moteur de templates Twig, intégré à Symfony, pour afficher la date.
@@ -14,7 +19,7 @@
 
         - J'ai modifié le fichier '\templates\base.html.twig'
         Dans le but d'afficher l'horaire sur toutes les pages
-            - J'ai rajouté du Java afin que l'horloge soit dynamique
+            - J'ai rajouté du Java afin que l'horloge soit dynamique et que le mois s'affiche en français
 
 A partir du wiki, j'ai :
     - Créée l'entité VieNote

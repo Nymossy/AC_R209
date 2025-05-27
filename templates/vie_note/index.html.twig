@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}VieNote index{% endblock %}
+
+{% block body %}
+    <h1>VieNote index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>ModifiedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vie_note in vie_notes %}
+            <tr>
+                <td>{{ vie_note.id }}</td>
+                <td>{{ vie_note.titre }}</td>
+                <td>{{ vie_note.description }}</td>
+                <td>{{ vie_note.modifiedAt ? vie_note.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_vie_note_show', {'id': vie_note.id}) }}">show</a>
+                    <a href="{{ path('app_vie_note_edit', {'id': vie_note.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_vie_note_new') }}">Create new</a>
+{% endblock %}
