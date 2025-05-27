@@ -15,3 +15,8 @@
         - J'ai modifié le fichier '\templates\base.html.twig'
         Dans le but d'afficher l'horaire sur toutes les pages
             - J'ai rajouté du Java afin que l'horloge soit dynamique
+
+A partir du wiki, j'ai :
+    - Créée l'entité VieNote
+        - Lui rajouter les champs : titre, description, modifiedAt
+        - Lui rajouter les relations : note (vers Note) et modifiedBy (User)

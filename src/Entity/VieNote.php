@@ -23,6 +23,14 @@ class VieNote
     #[ORM\Column]
     private ?\DateTimeImmutable $modifiedAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'vieNotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Note $note = null;
+
+    #[ORM\ManyToOne(inversedBy: 'vieNotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $modifiedBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +68,30 @@ class VieNote
     public function setModifiedAt(\DateTimeImmutable $modifiedAt): static
     {
         $this->modifiedAt = $modifiedAt;
+
+        return $this;
+    }
+
+    public function getNote(): ?Note
+    {
+        return $this->note;
+    }
+
+    public function setNote(?Note $note): static
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getModifiedBy(): ?User
+    {
+        return $this->modifiedBy;
+    }
+
+    public function setModifiedBy(?User $modifiedBy): static
+    {
+        $this->modifiedBy = $modifiedBy;
 
         return $this;
     }
