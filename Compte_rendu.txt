@@ -25,3 +25,6 @@ A partir du wiki, j'ai :
     - Créée l'entité VieNote
         - Lui rajouter les champs : titre, description, modifiedAt
         - Lui rajouter les relations : note (vers Note) et modifiedBy (User)
+
+    - Créée de crud de VieNote
+        ! Mais lorsqu'on va sur la page de l'historique, on ne voit pas l'historique des notes.
