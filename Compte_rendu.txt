@@ -1,0 +1,17 @@
+    Compte rendu TP1 :
+
+1. Création Controller Calendrier
+    1.1 Il existe 2 méthode pour afficher la date et l'heure :
+        1. On utilise le moteur de templates Twig, intégré à Symfony, pour afficher la date.
+        Le format est personnalisé avec le filtre |date.
+
+        2. On crée une réponse HTML brute directement en PHP.
+        C’est une méthode sans Twig, plus proche de la façon de faire en PHP "classique".
+
+    J'ai utilisé la 1ère méthode :
+        - J'ai ajouter une nouvelle page '\templates\calendrier\horaire.html.twig'
+        Dans le but d'afficher la date et l'heure
+
+        - J'ai modifié le fichier '\templates\base.html.twig'
+        Dans le but d'afficher l'horaire sur toutes les pages
+            - J'ai rajouté du Java afin que l'horloge soit dynamique
