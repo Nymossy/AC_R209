@@ -27,9 +27,11 @@ class SecurityController extends AbstractController
     }
 
     #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_USER")'))]
-    #[Route(path: '/logout', name: 'app_logout')]
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        // Cette méthode peut rester vide, la déconnexion est gérée par Symfony
+        // Elle ne sera jamais exécutée mais doit exister pour définir la route
+        throw new \LogicException('Cette méthode ne devrait jamais être appelée directement.');
     }
 }

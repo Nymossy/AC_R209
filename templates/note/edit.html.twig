@@ -1,13 +1,112 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Note{% endblock %}
+{% block title %}Modifier la note{% endblock %}
 
 {% block body %}
-    <h1>Edit Note</h1>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Modifier la note</h1>
+            <p class="text-muted">Modifiez les informations de la note</p>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <i class="fas fa-trash me-1"></i> Supprimer
+            </button>
+        </div>
+    </div>
 
-    {{ include('note/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Formulaire d'édition</h5>
+                </div>
+                <div class="card-body">
+                    {{ include('note/_form.html.twig', {'button_label': 'Enregistrer les modifications'}) }}
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary me-2">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                    </a>
+                    <a href="{{ path('app_note_show', {'id': note.id}) }}" class="btn btn-outline-primary">
+                        <i class="fas fa-eye me-1"></i> Voir les détails
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Informations</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>ID :</strong> {{ note.id }}</p>
+                    <p><strong>Date de création :</strong> {{ note.createdAt ? note.createdAt|date('d/m/Y à H:i') : 'Non définie' }}</p>
+                    
+                    {% if note.tag is defined and note.tag|length > 0 %}
+                        <p><strong>Tags :</strong></p>
+                        <div>
+                            {% for tag in note.tag %}
+                                <span class="badge bg-info text-dark me-1 mb-1">{{ tag.nom }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
 
-    <a href="{{ path('app_note_index') }}">back to list</a>
-
-    {{ include('note/_delete_form.html.twig') }}
+            {% if note.galeries is defined and note.galeries|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Images associées</h5>
+                        <span class="badge bg-primary">{{ note.galeries|length }}</span>
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="row g-2">
+                            {% for galerie in note.galeries|slice(0, 6) %}
+                                <div class="col-4">
+                                    <a href="{{ path('app_galerie_show', {'id': galerie.id}) }}">
+                                        <img src="{{ asset('Images/' ~ galerie.filePath) }}" class="img-thumbnail" alt="{{ galerie.nom }}">
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if note.galeries|length > 6 %}
+                            <div class="text-center mt-2">
+                                <small><a href="{{ path('app_note_galerie', {'id': note.id}) }}">Voir toutes les images</a></small>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('app_galerie_new') }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus-circle me-1"></i> Ajouter une image
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer la note <strong>"{{ note.titre }}"</strong> ?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    {{ include('note/_delete_form.html.twig', {'button_label': 'Supprimer définitivement'}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

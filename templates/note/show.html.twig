@@ -1,62 +1,195 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Note{% endblock %}
+{% block title %}Détails de la note{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h1>Note</h1>
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">{{ note.titre }}</h1>
+            <p class="text-muted">Détails et informations de la note</p>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <div class="btn-group" role="group">
+                <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="btn btn-primary">
+                    <i class="fas fa-edit me-1"></i> Modifier
+                </a>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <i class="fas fa-trash me-1"></i> Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ note.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ note.titre }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ note.description }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ note.createdAt ? note.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>EndAt</th>
-                <td>{{ note.endAt ? note.endAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Priorite</th>
-                <td>{{ note.priorite }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Informations générales</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 200px;" class="table-light">ID</th>
+                                    <td>{{ note.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="table-light">Titre</th>
+                                    <td>{{ note.titre }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="table-light">Description</th>
+                                    <td>{{ note.description|nl2br }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="table-light">Date de création</th>
+                                    <td>{{ note.createdAt ? note.createdAt|date('d/m/Y à H:i') : 'Non définie' }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="table-light">Échéance</th>
+                                    <td>
+                                        {% if note.endAt %}
+                                            {% set daysLeft = date(note.endAt).diff(date('now')).days %}
+                                            {% if daysLeft < 0 %}
+                                                <span class="badge bg-danger me-2">En retard ({{ daysLeft|abs }} jour(s))</span>
+                                            {% elseif daysLeft == 0 %}
+                                                <span class="badge bg-warning me-2">Aujourd'hui</span>
+                                            {% else %}
+                                                <span class="badge bg-success me-2">{{ daysLeft }} jour(s) restant(s)</span>
+                                            {% endif %}
+                                            {{ note.endAt|date('d/m/Y à H:i') }}
+                                        {% else %}
+                                            <span class="badge bg-secondary">Non définie</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="table-light">Priorité</th>
+                                    <td>
+                                        {% set priority_class = note.priorite > 7 ? 'danger' : (note.priorite > 4 ? 'warning' : 'success') %}
+                                        <span class="badge bg-{{ priority_class }} p-2">
+                                            {{ note.priorite }}/10
+                                            {% if note.priorite == 10 %}
+                                                <i class="fas fa-exclamation-circle ms-1"></i> Urgente
+                                            {% elseif note.priorite >= 7 %}
+                                                <i class="fas fa-arrow-up ms-1"></i> Haute
+                                            {% elseif note.priorite >= 4 %}
+                                                <i class="fas fa-minus ms-1"></i> Moyenne
+                                            {% else %}
+                                                <i class="fas fa-arrow-down ms-1"></i> Basse
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
 
-    <div class="mb-3">
-        <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary">Retour à la liste</a>
-        <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="btn btn-primary">Modifier</a>
-        {{ include('note/_delete_form.html.twig') }}
+        <div class="col-md-4">
+            {% if note.tag is defined and note.tag|length > 0 %}
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Tags</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for tag in note.tag %}
+                            <span class="badge bg-info text-dark me-2 mb-2 p-2">{{ tag.nom }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if note.etat is defined and note.etat %}
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">État</h5>
+                    </div>
+                    <div class="card-body">
+                        <span class="badge bg-primary p-2">{{ note.etat.nom }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <!-- Section pour les images associées -->
     {% if note.galeries is defined and note.galeries|length > 0 %}
         <div class="card mt-4">
-            <div class="card-header">Images associées</div>
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Images associées</h5>
+                <a href="{{ path('app_galerie_new') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus-circle me-1"></i> Ajouter une image
+                </a>
+            </div>
             <div class="card-body">
                 <div class="row">
                     {% for galerie in note.galeries %}
                         <div class="col-md-3 mb-3">
-                            <a href="{{ path('app_galerie_show', {'id': galerie.id}) }}">
-                                <img src="{{ asset('Images/' ~ galerie.filePath) }}" class="img-thumbnail" alt="{{ galerie.nom }}">
-                            </a>
+                            <div class="card">
+                                <a href="{{ path('app_galerie_show', {'id': galerie.id}) }}">
+                                    <img src="{{ asset('Images/' ~ galerie.filePath) }}" class="card-img-top" alt="{{ galerie.nom }}" style="height: 150px; object-fit: cover;">
+                                </a>
+                                <div class="card-body p-2">
+                                    <h6 class="card-title text-truncate mb-0">{{ galerie.nom }}</h6>
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
+                </div>
+                
+                {% if note.galeries|length > 8 %}
+                    <div class="text-center mt-3">
+                        <a href="{{ path('app_note_galerie', {'id': note.id}) }}" class="btn btn-outline-primary">
+                            Voir toutes les images ({{ note.galeries|length }})
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Images associées</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center mb-3">Aucune image n'est actuellement associée à cette note.</p>
+                <div class="text-center">
+                    <a href="{{ path('app_galerie_new') }}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle me-1"></i> Ajouter une image
+                    </a>
                 </div>
             </div>
         </div>
     {% endif %}
+
+    <!-- Modal de confirmation de suppression -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer la note <strong>"{{ note.titre }}"</strong> ?</p>
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    {{ include('note/_delete_form.html.twig', {'button_class': 'btn btn-danger'}) }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

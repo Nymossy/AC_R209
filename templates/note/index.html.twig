@@ -1,43 +1,145 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Note index{% endblock %}
+{% block title %}Liste des notes{% endblock %}
 
 {% block body %}
-    <h1>Note index</h1>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Notes</h1>
+            <p class="text-muted">Gérez vos notes et leurs informations</p>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <a href="{{ path('app_note_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle me-1"></i> Créer une nouvelle note
+            </a>
+        </div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>CreatedAt</th>
-                <th>EndAt</th>
-                <th>Priorite</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for note in notes %}
-            <tr>
-                <td>{{ note.id }}</td>
-                <td>{{ note.titre }}</td>
-                <td>{{ note.description }}</td>
-                <td>{{ note.createdAt ? note.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ note.endAt ? note.endAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ note.priorite }}</td>
-                <td>
-                    <a href="{{ path('app_note_show', {'id': note.id}) }}">show</a>
-                    <a href="{{ path('app_note_edit', {'id': note.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Notes disponibles</h5>
+                <span class="badge bg-primary">{{ notes|length }} note(s)</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Créée le</th>
+                            <th>Échéance</th>
+                            <th>Priorité</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for note in notes %}
+                        <tr>
+                            <td>{{ note.id }}</td>
+                            <td>
+                                <strong>{{ note.titre }}</strong>
+                                {% if note.tag is defined and note.tag|length > 0 %}
+                                    <div>
+                                    {% for tag in note.tag %}
+                                        <span class="badge bg-info text-dark">{{ tag.nom }}</span>
+                                    {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if note.description|length > 50 %}
+                                    {{ note.description|slice(0, 50) }}...
+                                {% else %}
+                                    {{ note.description }}
+                                {% endif %}
+                            </td>
+                            <td>{{ note.createdAt ? note.createdAt|date('d/m/Y') : '' }}</td>
+                            <td>
+                                {% if note.endAt %}
+                                    {% set daysLeft = date(note.endAt).diff(date('now')).days %}
+                                    {% if daysLeft < 0 %}
+                                        <span class="badge bg-danger">En retard ({{ daysLeft|abs }} j)</span>
+                                    {% elseif daysLeft == 0 %}
+                                        <span class="badge bg-warning">Aujourd'hui</span>
+                                    {% else %}
+                                        <span class="badge bg-success">{{ daysLeft }} jour(s)</span>
+                                    {% endif %}
+                                    <div><small>{{ note.endAt|date('d/m/Y') }}</small></div>
+                                {% else %}
+                                    <span class="badge bg-secondary">Non définie</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% set priority_class = note.priorite > 7 ? 'danger' : (note.priorite > 4 ? 'warning' : 'success') %}
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-{{ priority_class }}" role="progressbar" 
+                                        style="width: {{ (note.priorite / 10 * 100)|round }}%;" 
+                                        aria-valuenow="{{ note.priorite }}" aria-valuemin="0" aria-valuemax="10">
+                                        {{ note.priorite }}/10
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('app_note_show', {'id': note.id}) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye me-1"></i> Voir
+                                    </a>
+                                    <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit me-1"></i> Modifier
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ note.id }}">
+                                        <i class="fas fa-trash me-1"></i> Supprimer
+                                    </button>
+                                </div>
 
-    <a href="{{ path('app_note_new') }}">Create new</a>
+                                <!-- Modal de confirmation de suppression -->
+                                <div class="modal fade" id="deleteModal{{ note.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ note.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ note.id }}">Confirmer la suppression</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Êtes-vous sûr de vouloir supprimer la note <strong>"{{ note.titre }}"</strong> ?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <form method="post" action="{{ path('app_note_delete', {'id': note.id}) }}" style="display: inline-block">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ note.id) }}">
+                                                    <button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Aucune note n'a été trouvée. Commencez par en créer une !
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
 {% endblock %}

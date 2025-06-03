@@ -1,11 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Galerie{% endblock %}
+{% block title %}Nouvelle image{% endblock %}
 
 {% block body %}
-    <h1>Create new Galerie</h1>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Ajouter une image</h1>
+            <p class="text-muted">Ajoutez une nouvelle image à la galerie</p>
+        </div>
+    </div>
 
-    {{ include('galerie/_form.html.twig') }}
-
-    <a href="{{ path('app_galerie_index') }}">back to list</a>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Formulaire d'ajout</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-save me-1"></i>Sauvegarder
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{{ path('app_galerie_index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la galerie
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Instructions</h5>
+                </div>
+                <div class="card-body bg-warning bg-opacity-10">
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Sélectionnez un fichier image à télécharger.</p>
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Formats acceptés : JPG, PNG, GIF.</p>
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Taille maximale : 10 Mo.</p>
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Donnez un nom descriptif à votre image.</p>
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Associez l'image à une note existante.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -18,10 +18,13 @@ class Tag
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[ORM\Column(length: 7, nullable: true)]
+    private ?string $couleur = null;
+
     /**
      * @var Collection<int, Note>
      */
-    #[ORM\ManyToMany(targetEntity: Note::class, mappedBy: 'tag')]
+    #[ORM\ManyToMany(targetEntity: Note::class, mappedBy: 'tags')]
     private Collection $notes;
 
     public function __construct()
@@ -42,6 +45,18 @@ class Tag
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getCouleur(): ?string
+    {
+        return $this->couleur;
+    }
+
+    public function setCouleur(?string $couleur): static
+    {
+        $this->couleur = $couleur;
 
         return $this;
     }

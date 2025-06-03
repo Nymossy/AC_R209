@@ -32,57 +32,6 @@ final class NoteController extends AbstractController
             'notes' => $noteRepository->findAll(),
         ]);
     }
-
-    // Route pour la page d'administration des notes
-    #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_USER")'))]
-    #[Route('/liste', name: 'app_note_liste')]
-    public function listeNotes(EntityManagerInterface $em): Response
-    {
-        $user = $this->getUser();
-
-        try {
-            // Critère 1 : Notes "En cours"
-            $notesEnCours = $em->createQueryBuilder()
-                ->select('n')
-                ->from(Note::class, 'n')
-                ->join('n.etat', 'e')
-                ->where('e.nom = :etat')
-                ->setParameter('etat', 'En cours')
-                ->getQuery()
-                ->getResult();
-
-            // Critère 2 : Notes taguées "Urgent"
-            $notesUrgentes = $em->createQueryBuilder()
-                ->select('n')
-                ->from(Note::class, 'n')
-                ->join('n.tag', 't')
-                ->where('t.nom = :tag')
-                ->setParameter('tag', 'Urgent')
-                ->getQuery()
-                ->getResult();
-
-            // Critère 3 : Notes de l'utilisateur connecté
-            $notes = $user->getNotes();
-            
-            // Critère 4 : état = "En cours"
-            $etatEnCours = $em->getRepository(Etat::class)->findOneBy(['nom' => 'En cours']);
-            $criteriaEtat = Criteria::create()->where(Criteria::expr()->eq('etat', $etatEnCours));
-            $notesEnCours2 = $notes->matching($criteriaEtat);
-        } catch (\Exception $e) {
-            // En cas d'erreur, initialisez les variables avec des tableaux vides
-            $notesEnCours = [];
-            $notesUrgentes = [];
-            $notes = [];
-            $notesEnCours2 = [];
-        }
-
-        return $this->render('note/liste.html.twig', [
-            'notes_en_cours' => $notesEnCours,
-            'notes_en_cours2' => $notesEnCours2,
-            'notes_urgentes' => $notesUrgentes,
-            'notes_utilisateur' => $notes,
-        ]);
-    }
     
     //fonction exemple récupération
     #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_USER")'))]

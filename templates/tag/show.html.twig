@@ -1,26 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tag{% endblock %}
+{% block title %}Détails du tag{% endblock %}
 
 {% block body %}
-    <h1>Tag</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ tag.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ tag.nom }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_tag_index') }}">back to list</a>
-
-    <a href="{{ path('app_tag_edit', {'id': tag.id}) }}">edit</a>
-
-    {{ include('tag/_delete_form.html.twig') }}
+<div class="container mt-4">
+    <h1>Détails du tag</h1>
+    <p>ID: {{ tag.id }}</p>
+    <p>Nom: {{ tag.nom }}</p>
+    
+    <a href="{{ path('app_tag_index') }}" class="btn btn-secondary">Retour à la liste</a>
+</div>
 {% endblock %}
