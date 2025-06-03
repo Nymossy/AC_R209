@@ -11,12 +11,14 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\User;
 use App\Entity\Etat;
-use App\Form\Note;
-use App\Form\Tag;
+use App\Entity\Note;  // Utilisez les entités directement
+use App\Entity\Tag;   // Utilisez les entités directement
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Note as NoteEntity;
-use App\Entity\Tag as TagEntity;
+
+// Si vous avez besoin des formulaires, importez-les avec un alias
+// use App\Form\NoteType;
+// use App\Form\TagType;
 
 final class DashboardController extends AbstractController
 {

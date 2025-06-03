@@ -45,10 +45,10 @@
                     <p><strong>ID :</strong> {{ note.id }}</p>
                     <p><strong>Date de création :</strong> {{ note.createdAt ? note.createdAt|date('d/m/Y à H:i') : 'Non définie' }}</p>
                     
-                    {% if note.tag is defined and note.tag|length > 0 %}
+                    {% if note.tags is defined and note.tags|length > 0 %}
                         <p><strong>Tags :</strong></p>
                         <div>
-                            {% for tag in note.tag %}
+                            {% for tag in note.tags %}
                                 <span class="badge bg-info text-dark me-1 mb-1">{{ tag.nom }}</span>
                             {% endfor %}
                         </div>

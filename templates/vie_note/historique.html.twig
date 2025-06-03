@@ -55,11 +55,11 @@
                             </div>
                         {% endif %}
                         
-                        {% if vie_note.note.tag and vie_note.note.tag|length > 0 %}
+                        {% if vie_note.note.tags is defined and vie_note.note.tags is not empty %}
                             <div class="row">
                                 <div class="col-md-2"><strong>Tags :</strong></div>
                                 <div class="col-md-10">
-                                    {% for tag in vie_note.note.tag %}
+                                    {% for tag in vie_note.note.tags %}
                                         <span class="badge bg-info me-1">{{ tag.nom }}</span>
                                     {% endfor %}
                                 </div>

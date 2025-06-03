@@ -1,11 +1,101 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New VieNote{% endblock %}
+{% block title %}Nouvelle entrée d'historique{% endblock %}
 
 {% block body %}
-    <h1>Create new VieNote</h1>
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Créer un nouvel historique</h1>
+            <p class="text-muted">Ajoutez une nouvelle entrée dans l'historique des modifications d'une note</p>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+            <a href="{{ path('app_vie_note_index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
 
-    {{ include('vie_note/_form.html.twig') }}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Formulaire d'ajout</h5>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.titre) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.modifiedAt) }}
+                            </div>
+                        </div>
+                        
+                        {{ form_row(form.description) }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.note) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.modifiedBy) }}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-1"></i> Enregistrer
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Instructions</h5>
+                </div>
+                <div class="card-body bg-warning bg-opacity-10">
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> L'historique permet de tracer les modifications apportées à une note.</p>
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Chaque entrée doit être liée à une note existante.</p>
+                    <p><i class="fas fa-info-circle text-warning me-1"></i> Soyez précis dans la description des modifications pour faciliter le suivi.</p>
+                </div>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Astuces</h5>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-lightbulb text-primary me-1"></i> Utilisez un titre court mais descriptif pour identifier rapidement la modification.</p>
+                    <p><i class="fas fa-lightbulb text-primary me-1"></i> La date de modification est automatiquement définie à aujourd'hui, mais vous pouvez la modifier si nécessaire.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-    <a href="{{ path('app_vie_note_index') }}">back to list</a>
+{% block javascripts %}
+{{ parent() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Si la date n'est pas définie, définir la date actuelle
+        const dateInput = document.querySelector('input[type="datetime-local"]');
+        if (dateInput && !dateInput.value) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+    });
+</script>
 {% endblock %}

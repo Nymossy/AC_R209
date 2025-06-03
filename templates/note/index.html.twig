@@ -43,9 +43,9 @@
                             <td>{{ note.id }}</td>
                             <td>
                                 <strong>{{ note.titre }}</strong>
-                                {% if note.tag is defined and note.tag|length > 0 %}
+                                {% if note.tags is defined and note.tags|length > 0 %}
                                     <div>
-                                    {% for tag in note.tag %}
+                                    {% for tag in note.tags %}
                                         <span class="badge bg-info text-dark">{{ tag.nom }}</span>
                                     {% endfor %}
                                     </div>
