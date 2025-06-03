@@ -43,7 +43,7 @@ class Note
      * @var Collection<int, Tag>
      */
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'notes')]
-    private Collection $tag;
+    private Collection $tags;
 
     /**
      * @var Collection<int, VieNote>
@@ -59,7 +59,7 @@ class Note
 
     public function __construct()
     {
-        $this->tag = new ArrayCollection();
+        $this->tags = new ArrayCollection();
         $this->vieNotes = new ArrayCollection();
         $this->galeries = new ArrayCollection();
     }
@@ -156,15 +156,15 @@ class Note
     /**
      * @return Collection<int, Tag>
      */
-    public function getTag(): Collection
+    public function getTags(): Collection
     {
-        return $this->tag;
+        return $this->tags;
     }
 
     public function addTag(Tag $tag): static
     {
-        if (!$this->tag->contains($tag)) {
-            $this->tag->add($tag);
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
         }
 
         return $this;
@@ -172,7 +172,7 @@ class Note
 
     public function removeTag(Tag $tag): static
     {
-        $this->tag->removeElement($tag);
+        $this->tags->removeElement($tag);
 
         return $this;
     }

@@ -49,8 +49,15 @@ final class TagController extends AbstractController
 
     #[IsGranted(new Expression('is_granted("ROLE_ADMIN") or is_granted("ROLE_USER")'))]
     #[Route('/{id}', name: 'app_tag_show', methods: ['GET'])]
-    public function show(Tag $tag): Response
+    public function show(int $id, TagRepository $tagRepository): Response
     {
+        // Récupérer le tag avec ses notes associées
+        $tag = $tagRepository->findOneWithNotes($id);
+        
+        if (!$tag) {
+            throw $this->createNotFoundException('Tag not found');
+        }
+        
         return $this->render('tag/show.html.twig', [
             'tag' => $tag,
         ]);

@@ -21,9 +21,6 @@ class Tag
     #[ORM\Column(length: 7, nullable: true)]
     private ?string $couleur = null;
 
-    /**
-     * @var Collection<int, Note>
-     */
     #[ORM\ManyToMany(targetEntity: Note::class, mappedBy: 'tags')]
     private Collection $notes;
 
@@ -88,3 +85,4 @@ class Tag
         return $this;
     }
 }
+

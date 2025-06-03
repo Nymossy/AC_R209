@@ -40,4 +40,15 @@ class TagRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findOneWithNotes(int $id): ?Tag
+    {
+        return $this->createQueryBuilder('t')
+            ->addSelect('n')
+            ->leftJoin('t.notes', 'n')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
