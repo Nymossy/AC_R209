@@ -56,10 +56,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: VieNote::class, mappedBy: 'modifiedBy')]
     private Collection $vieNotes;
 
+    /**
+     * @var Collection<int, Galerie>
+     */
+    #[ORM\OneToMany(targetEntity: Galerie::class, mappedBy: 'uploadBy')]
+    private Collection $galeries;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
         $this->vieNotes = new ArrayCollection();
+        $this->galeries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -225,6 +232,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($vieNote->getModifiedBy() === $this) {
                 $vieNote->setModifiedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Galerie>
+     */
+    public function getGaleries(): Collection
+    {
+        return $this->galeries;
+    }
+
+    public function addGalery(Galerie $galery): static
+    {
+        if (!$this->galeries->contains($galery)) {
+            $this->galeries->add($galery);
+            $galery->setUploadBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGalery(Galerie $galery): static
+    {
+        if ($this->galeries->removeElement($galery)) {
+            // set the owning side to null (unless already changed)
+            if ($galery->getUploadBy() === $this) {
+                $galery->setUploadBy(null);
             }
         }
 

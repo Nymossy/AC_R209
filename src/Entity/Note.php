@@ -51,10 +51,17 @@ class Note
     #[ORM\OneToMany(targetEntity: VieNote::class, mappedBy: 'note')]
     private Collection $vieNotes;
 
+    /**
+     * @var Collection<int, Galerie>
+     */
+    #[ORM\OneToMany(targetEntity: Galerie::class, mappedBy: 'noteLiaison')]
+    private Collection $galeries;
+
     public function __construct()
     {
         $this->tag = new ArrayCollection();
         $this->vieNotes = new ArrayCollection();
+        $this->galeries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +201,36 @@ class Note
             // set the owning side to null (unless already changed)
             if ($vieNote->getNote() === $this) {
                 $vieNote->setNote(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Galerie>
+     */
+    public function getGaleries(): Collection
+    {
+        return $this->galeries;
+    }
+
+    public function addGalery(Galerie $galery): static
+    {
+        if (!$this->galeries->contains($galery)) {
+            $this->galeries->add($galery);
+            $galery->setNoteLiaison($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGalery(Galerie $galery): static
+    {
+        if ($this->galeries->removeElement($galery)) {
+            // set the owning side to null (unless already changed)
+            if ($galery->getNoteLiaison() === $this) {
+                $galery->setNoteLiaison(null);
             }
         }
 

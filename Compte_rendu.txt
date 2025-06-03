@@ -32,3 +32,18 @@ A partir du wiki, j'ai :
 ------
 
         Compte rendu TP2 :
+Module en Javascript, je vais juste utiliser celui de l'horaire que j'ai fait précédement.
+Il me permet d'afficher la date et l'heure sur mes pages.
+
+Pour le nouveau module j'ai créer une entity Galerie avec un crud.
+entity : Galerie
+propriété :	nom
+	        fileSize
+            uploadAt
+            uploadBy - relation avec la table User
+            noteLiaison - relation avec la table Note
+
+Le but de cette méthode est d'avoir une galerie d'images.
+Chaques images pourra être liée avec une ou plusieurs notes.
+On pourra à la fin importer, exporter, ajouter et supprimer une image de la galerie.
+Lorsqu'on visualise la galerie, chaque utilisateur verra toutes les images, même celles qu'il n'a pas ajoutées.

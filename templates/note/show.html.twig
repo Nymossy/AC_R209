@@ -3,6 +3,7 @@
 {% block title %}Note{% endblock %}
 
 {% block body %}
+<div class="container mt-4">
     <h1>Note</h1>
 
     <table class="table">
@@ -34,9 +35,28 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_note_index') }}">back to list</a>
+    <div class="mb-3">
+        <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary">Retour à la liste</a>
+        <a href="{{ path('app_note_edit', {'id': note.id}) }}" class="btn btn-primary">Modifier</a>
+        {{ include('note/_delete_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('app_note_edit', {'id': note.id}) }}">edit</a>
-
-    {{ include('note/_delete_form.html.twig') }}
+    <!-- Section pour les images associées -->
+    {% if note.galeries is defined and note.galeries|length > 0 %}
+        <div class="card mt-4">
+            <div class="card-header">Images associées</div>
+            <div class="card-body">
+                <div class="row">
+                    {% for galerie in note.galeries %}
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ path('app_galerie_show', {'id': galerie.id}) }}">
+                                <img src="{{ asset('Images/' ~ galerie.filePath) }}" class="img-thumbnail" alt="{{ galerie.nom }}">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
