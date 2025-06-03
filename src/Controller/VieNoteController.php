@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\VieNote;
+use App\Entity\Note;
 use App\Form\VieNoteForm;
 use App\Repository\VieNoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +20,23 @@ final class VieNoteController extends AbstractController
     {
         return $this->render('vie_note/index.html.twig', [
             'vie_notes' => $vieNoteRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/historique', name: 'app_vie_note_historique', methods: ['GET'])]
+    public function historique(EntityManagerInterface $entityManager): Response
+    {   
+
+        $vieNotes = $entityManager->getRepository(VieNote::class)
+            ->createQueryBuilder('v')
+            ->join('v.note', 'n')
+            ->addSelect('n')
+            ->orderBy('v.modifiedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+            
+        return $this->render('vie_note/historique.html.twig', [
+            'vie_notes' => $vieNotes
         ]);
     }
 

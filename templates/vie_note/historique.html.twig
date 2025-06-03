@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des modifications{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Historique des modifications</h1>
+    
+    {% if vie_notes is empty %}
+        <div class="alert alert-info">
+            Aucun historique disponible pour cette note.
+        </div>
+    {% else %}
+        <h3>Note : {{ vie_notes[0].note.titre }}</h3>
+        
+        <div class="timeline mt-4">
+            {% for vie_note in vie_notes %}
+                <div class="card mb-3 border-{% if loop.first %}primary{% else %}secondary{% endif %}">
+                    <div class="card-header d-flex justify-content-between {% if loop.first %}bg-primary text-white{% endif %}">
+                        <div>
+                            <strong>Modifié par :</strong> 
+                            {% if vie_note.modifiedBy %}
+                                {{ vie_note.modifiedBy.email }}
+                            {% else %}
+                                Utilisateur inconnu
+                            {% endif %}
+                        </div>
+                        <div>
+                            <strong>Date :</strong> {{ vie_note.modifiedAt|date('d/m/Y H:i') }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Version #{{ loop.revindex }}</h5>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-2"><strong>Titre :</strong></div>
+                            <div class="col-md-10">{{ vie_note.note.titre }}</div>
+                        </div>
+                        
+                        {% if vie_note.note.description %}
+                            <div class="row mb-3">
+                                <div class="col-md-2"><strong>Description :</strong></div>
+                                <div class="col-md-10">{{ vie_note.note.description }}</div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vie_note.note.etat %}
+                            <div class="row mb-3">
+                                <div class="col-md-2"><strong>État :</strong></div>
+                                <div class="col-md-10">
+                                    <span class="badge bg-{{ vie_note.note.etat.nom == 'En cours' ? 'warning' : (vie_note.note.etat.nom == 'Terminé' ? 'success' : 'secondary') }}">
+                                        {{ vie_note.note.etat.nom }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if vie_note.note.tag and vie_note.note.tag|length > 0 %}
+                            <div class="row">
+                                <div class="col-md-2"><strong>Tags :</strong></div>
+                                <div class="col-md-10">
+                                    {% for tag in vie_note.note.tag %}
+                                        <span class="badge bg-info me-1">{{ tag.nom }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4">
+            <a href="{{ path('app_note_show', {'id': vie_notes[0].note.id}) }}" class="btn btn-outline-secondary">
+                Retour à la note
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
