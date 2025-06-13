@@ -45,8 +45,8 @@
                                 <strong>{{ note.titre }}</strong>
                                 {% if note.tags is defined and note.tags|length > 0 %}
                                     <div>
-                                    {% for tag in note.tags %}
-                                        <span class="badge bg-info text-dark">{{ tag.nom }}</span>
+                                    {% for tags in note.tags %}
+                                        <span class="badge bg-info text-dark">{{ tags.nom }}</span>
                                     {% endfor %}
                                     </div>
                                 {% endif %}
@@ -142,4 +142,14 @@
         </a>
     </div>
 </div>
+
+<style>
+.color-sample {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+</style>
 {% endblock %}

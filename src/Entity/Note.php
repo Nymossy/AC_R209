@@ -161,18 +161,18 @@ class Note
         return $this->tags;
     }
 
-    public function addTag(Tag $tag): static
+    public function addTag(Tag $tags): static
     {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
+        if (!$this->tags->contains($tags)) {
+            $this->tags->add($tags);
         }
 
         return $this;
     }
 
-    public function removeTag(Tag $tag): static
+    public function removeTag(Tag $tags): static
     {
-        $this->tags->removeElement($tag);
+        $this->tags->removeElement($tags);
 
         return $this;
     }

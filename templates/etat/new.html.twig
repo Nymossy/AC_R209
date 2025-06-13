@@ -1,11 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Etat{% endblock %}
+{% block title %}Nouvel État{% endblock %}
 
 {% block body %}
-    <h1>Create new Etat</h1>
+<div class="container mt-4">
+    <h1>Créer un nouvel état</h1>
 
-    {{ include('etat/_form.html.twig') }}
+    <div class="card mb-4">
+        <div class="card-body">
+            {{ include('etat/_form.html.twig') }}
+        </div>
+    </div>
 
-    <a href="{{ path('app_etat_index') }}">back to list</a>
+    <a href="{{ path('app_etat_index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour à la liste
+    </a>
+</div>
 {% endblock %}

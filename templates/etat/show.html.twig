@@ -1,30 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Etat{% endblock %}
+{% block title %}Détail de l'état{% endblock %}
 
 {% block body %}
-    <h1>Etat</h1>
+<div class="container mt-4">
+    <h1>Détail de l'état</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ etat.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ etat.nom }}</td>
-            </tr>
-            <tr>
-                <th>Couleur</th>
-                <td>{{ etat.couleur }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <td>{{ etat.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ etat.nom }}</td>
+                    </tr>
+                    <tr>
+                        <th>Couleur</th>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div style="width: 30px; height: 30px; background-color: {{ etat.couleur }}; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;"></div>
+                                <span>{{ etat.couleur }}</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <a href="{{ path('app_etat_index') }}">back to list</a>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_etat_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+        
+        <a href="{{ path('app_etat_edit', {'id': etat.id}) }}" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Modifier
+        </a>
 
-    <a href="{{ path('app_etat_edit', {'id': etat.id}) }}">edit</a>
-
-    {{ include('etat/_delete_form.html.twig') }}
+        {{ include('etat/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

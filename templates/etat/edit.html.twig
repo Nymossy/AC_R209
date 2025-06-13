@@ -1,13 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Etat{% endblock %}
+{% block title %}Modifier l'état{% endblock %}
 
 {% block body %}
-    <h1>Edit Etat</h1>
+<div class="container mt-4">
+    <h1>Modifier l'état</h1>
 
-    {{ include('etat/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="card mb-4">
+        <div class="card-body">
+            {{ include('etat/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+        </div>
+    </div>
 
-    <a href="{{ path('app_etat_index') }}">back to list</a>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_etat_index') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
 
-    {{ include('etat/_delete_form.html.twig') }}
+        {{ include('etat/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}
